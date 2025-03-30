@@ -7,7 +7,7 @@ import {
   Home,
   PostList,
   SinglePost,
-  AddPost,
+  Write,
   Login,
   Register
 } from './pages/index.jsx';
@@ -30,8 +30,8 @@ const router = createBrowserRouter([
         element: <SinglePost />,
       },
       {
-        path: "/add",
-        element: <AddPost />,
+        path: "/write",
+        element: <Write />,
       },
       {
         path: "/login",
