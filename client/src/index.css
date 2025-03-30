@@ -1,8 +1,17 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #193cb8;
+  --color-secondary: #6a7282;
+}
+
 body {
   background-color: #e6e6ff;
   width: 100vw;
   overflow-x: hidden;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-family: sans-serif;
+}
+
+.animatedButton {
+  animation-duration: 10000ms;
 }
