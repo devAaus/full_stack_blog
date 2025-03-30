@@ -3,6 +3,7 @@
 @theme {
   --color-primary: #193cb8;
   --color-secondary: #6a7282;
+  --color-destructive: #ff3c20;
 }
 
 body {

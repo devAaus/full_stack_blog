@@ -2,7 +2,7 @@ import { useState } from "react"
 import { IoMenu } from "react-icons/io5";
 import Image from "./Image";
 import { Link } from "react-router";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 
 const Navbar = () => {
    const [open, setopen] = useState(false);
@@ -13,8 +13,8 @@ const Navbar = () => {
             <Image
                src="/logo.png"
                alt="logo"
-               w={100}
-               h={100}
+               w={120}
+               h={35}
             />
          </Link>
 
