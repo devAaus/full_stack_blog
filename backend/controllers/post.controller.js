@@ -1,6 +1,23 @@
 import Post from '../models/post.model.js';
 import User from '../models/user.model.js';
 
+// get user by clerk user id
+const getUser = async (req) => {
+   const clerkUserId = req.auth.userId;
+
+   if (!clerkUserId) {
+      return res.status(401).json({ message: 'Not authenticated' });
+   }
+
+   const user = await User.findOne({ clerkUserId })
+
+   if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+   }
+
+   return user;
+}
+
 // get all posts
 export const getPosts = async (req, res) => {
    const posts = await Post.find()
@@ -19,19 +36,7 @@ export const getPostbySlug = async (req, res) => {
 
 // create post
 export const createPost = async (req, res) => {
-   console.log(req);
-
-   const clerkUserId = req.auth.userId;
-
-   if (!clerkUserId) {
-      return res.status(401).json({ message: 'Not authenticated' });
-   }
-
-   const user = await User.findOne({ clerkUserId })
-
-   if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-   }
+   const user = await getUser(req);
 
    let slug = req.body.title.trim().replace(/\s+/g, '-').toLowerCase();
    let existingPost = await Post.findOne({ slug });
@@ -59,14 +64,7 @@ export const createPost = async (req, res) => {
 
 // delete post
 export const deletePost = async (req, res) => {
-
-   const clertUserId = req.auth.userId;
-
-   if (!clertUserId) {
-      return res.status(401).json({ message: 'Not authenticated' });
-   }
-
-   const user = await User.findOne({ clertUserId })
+   const user = await getUser(req);
 
    const post = await Post.findByIdAndDelete({
       _id: req.params.id,
