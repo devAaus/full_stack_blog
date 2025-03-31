@@ -5,7 +5,7 @@ import {
 import MainLayout from './layouts/MainLayout.jsx';
 import {
   Home,
-  PostList,
+  Posts as PostList,
   SinglePost,
   Write,
   Login,
