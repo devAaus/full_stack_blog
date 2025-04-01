@@ -1,31 +1,60 @@
 import React from 'react'
 import PostCard from './PostCard'
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import axios from 'axios'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import Loader from './Loader'
 
-const fetchPosts = async () => {
-   const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts`)
+const fetchPosts = async (pageParam) => {
+   const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts`, {
+      params: { page: pageParam, limit: 2 },
+   })
    return response.data;
 }
 
 const PostList = () => {
-   const { isPending, error, data } = useQuery({
+   const {
+      data,
+      error,
+      fetchNextPage,
+      hasNextPage,
+      isFetching,
+      isFetchingNextPage,
+      status,
+   } = useInfiniteQuery({
       queryKey: ['posts'],
-      queryFn: () => fetchPosts()
+      queryFn: ({ pageParam = 1 }) => fetchPosts(pageParam),
+      initialPageParam: 1,
+      getNextPageParam: (lastPage, pages) =>
+         lastPage.hasMore ? pages.length + 1 : undefined,
    })
 
-   if (isPending) return 'Loading...'
+   // if (isFetching) return "Loading...";
 
-   if (error) return 'An error has occurred: ' + error.message
+   if (error) return "Something went wrong!";
+
+   const allPosts = data?.pages?.flatMap((page) => page.posts) || [];
 
    return (
-      <div className='flex flex-col gap-12 mb-8'>
-         <PostCard />
-         <PostCard />
-         <PostCard />
-         <PostCard />
-         <PostCard />
-      </div>
+      <InfiniteScroll
+         dataLength={allPosts.length}
+         next={fetchNextPage}
+         hasMore={!!hasNextPage}
+         loader={
+            <div className="flex flex-col items-center justify-center w-full">
+               <Loader />
+            </div>
+         }
+         endMessage={
+            <p className='font-semibold text-center'>
+               All posts loaded!
+            </p>
+         }
+      >
+         {allPosts.map((post) => (
+            <PostCard key={post._id} post={post} />
+         ))}
+      </InfiniteScroll>
    )
 }
 
